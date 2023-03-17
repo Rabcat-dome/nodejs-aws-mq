@@ -23,18 +23,24 @@ const uuidv1 = require('uuid/v1');
 let options = {
   username: "activemq",
   password: "874521Active",
-  clientId: 'mqttLambda_' + uuidv1()
-}
+  clientId: 'mqttPublisher01',
+  clean: false
+};
 
-let mqEndpoint = "wss://b-769365f5-edc6-47cf-a2d3-26a29cea937b-1.mq.ap-southeast-1.amazonaws.com:61619"
-let topic = "/queue/testTopic"
+let qosOptions = {
+  retain:true,
+  qos:1
+};
 
-let client = mqtt.connect( mqEndpoint, options)
+let mqEndpoint = "wss://b-769365f5-edc6-47cf-a2d3-26a29cea937b-1.mq.ap-southeast-1.amazonaws.com:61619";
+let topic = "testTopicRetain";
+
+let client = mqtt.connect( mqEndpoint, options);
 
 // Once connected subscribe to the topic
 
 setInterval(() => {
     let num = Math.random();
     console.log(num);
-    client.publish(topic, "hello from NodeJS =>" + num);
+    client.publish(topic, "hello from NodeJS =>" + num, qosOptions);
 }, 5000);

@@ -23,19 +23,26 @@ const uuidv1 = require('uuid/v1');
 let options = {
   username: "activemq",
   password: "874521Active",
-  clientId: 'mqttLambda_' + uuidv1()
+  clientId: 'mqttclient01',
+  clean: false
 }
 
+let qosOptions = {qos:1};
+
 let mqEndpoint = "wss://b-769365f5-edc6-47cf-a2d3-26a29cea937b-1.mq.ap-southeast-1.amazonaws.com:61619"
-let topic = "/queue/testTopic"
+let topic = "testTopicRetain"
 
 let client = mqtt.connect( mqEndpoint, options)
 
 // Once connected subscribe to the topic
 client.on('connect', function() {
   console.log("connected")
-  client.subscribe(topic, function (err) {
-    if(err) console.log(err)
+  client.subscribe(topic, qosOptions, function (err) {
+    if(err) {
+      console.log(err)
+    }else{
+      console.log("Subscribed successfully");
+    }
   })
 })
 
